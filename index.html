@@ -607,17 +607,26 @@
 
     .clients-track {
       display: flex;
+      flex-wrap: nowrap;
       gap: 32px;
       align-items: center;
-      white-space: nowrap;
-      animation: scroll 28s linear infinite;
       width: max-content;
-      min-width: 300%;
+      min-width: max-content;
+      animation: marquee 20s linear infinite;
       will-change: transform;
     }
 
     .clients-track:hover {
       animation-play-state: paused;
+    }
+
+    .clients-track-wrapper {
+      overflow: hidden;
+      width: 100%;
+      position: relative;
+      padding: 20px 0 48px;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
     }
 
     .client-item {
@@ -640,9 +649,9 @@
       filter: grayscale(0%) opacity(1);
     }
 
-    @keyframes scroll {
+    @keyframes marquee {
       0% { transform: translateX(0); }
-      100% { transform: translateX(-33.3333%); }
+      100% { transform: translateX(-33.333%); }
     }
 
     .impact {
@@ -697,12 +706,12 @@
     }
 
     .cta-button {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
       gap: 12px;
       padding: 16px 30px;
-      border-radius: 999px;
+      border-radius: 0;
       background: #25D366;
       color: #000000;
       text-decoration: none;
@@ -710,6 +719,13 @@
       font-weight: 700;
       letter-spacing: 0.12em;
       transition: transform 0.3s ease, background 0.3s ease;
+      margin: 0 auto;
+      width: fit-content;
+    }
+
+    .cta-button svg {
+      width: 18px;
+      height: 18px;
     }
 
     .cta-button:hover {
@@ -848,15 +864,16 @@
       }
 
       .cta-button {
-        border-radius: 0;
-        font-size: 0.8rem;
-        padding: 16px 24px;
+        font-size: 0.82rem;
+        padding: 16px 28px;
         white-space: nowrap;
-        width: auto;
+        width: fit-content;
       }
 
       .clients-track {
         animation: marquee 15s linear infinite !important;
+        width: max-content !important;
+        min-width: max-content !important;
       }
 
       .clients-track-wrapper {
