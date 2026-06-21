@@ -6,13 +6,14 @@
   <title>Avodah - Agência de Marketing Digital</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: dark;
       font-family: 'Inter', sans-serif;
       background: #000000;
       color: #FFFFFF;
+      font-size: 16px;
     }
 
     * {
@@ -29,10 +30,14 @@
       min-height: 100vh;
       background: #000000;
       color: #FFFFFF;
-      font-weight: 300;
       line-height: 1.8;
       overflow-x: hidden;
       position: relative;
+    }
+
+    body::selection {
+      background: #000000;
+      color: #FFFFFF;
     }
 
     body::before {
@@ -42,21 +47,27 @@
       background: rgba(255,255,255,0.03);
       pointer-events: none;
       opacity: 0.05;
+      z-index: 1;
     }
 
     .cursor {
       position: fixed;
       top: 0;
       left: 0;
-      width: 12px;
-      height: 12px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
       background: rgba(255,255,255,0.95);
       pointer-events: none;
       transform: translate(-50%, -50%);
-      transition: transform 0.15s ease-out, width 0.15s ease-out, height 0.15s ease-out;
-      z-index: 10000;
+      transition: width 0.18s ease, height 0.18s ease, transform 0.18s ease;
+      z-index: 9999;
       mix-blend-mode: difference;
+    }
+
+    .cursor.cursor-hover {
+      width: 28px;
+      height: 28px;
     }
 
     .container {
@@ -65,12 +76,20 @@
     }
 
     header {
-      position: sticky;
+      position: fixed;
       top: 0;
-      z-index: 50;
-      background: #000000;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      backdrop-filter: blur(32px);
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(0,0,0,0.72);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(24px);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    header.scrolled {
+      background: rgba(0,0,0,0.92);
+      border-color: rgba(255,255,255,0.14);
     }
 
     .header-inner {
@@ -78,10 +97,11 @@
       align-items: center;
       justify-content: space-between;
       min-height: 88px;
+      position: relative;
     }
 
     .logo img {
-      height: 100px;
+      height: 60px;
       display: block;
     }
 
@@ -96,9 +116,10 @@
       color: #FFFFFF;
       text-decoration: none;
       font-size: 0.95rem;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      transition: color 0.2s ease;
+      font-weight: 500;
+      transition: color 0.3s ease;
     }
 
     .nav-menu a:hover {
@@ -109,7 +130,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 16px 24px;
+      padding: 14px 24px;
       border: 1px solid #FFFFFF;
       background: transparent;
       color: #FFFFFF;
@@ -117,13 +138,61 @@
       font-size: 0.95rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      transition: background 0.25s ease, color 0.25s ease;
+      transition: all 0.3s ease;
     }
 
-    .btn-contact:hover,
-    .btn-ghost:hover {
+    .btn-contact:hover {
       background: #FFFFFF;
       color: #000000;
+    }
+
+    .mobile-toggle {
+      display: none;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 12px;
+      background: transparent;
+      color: #FFFFFF;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .mobile-toggle:hover {
+      border-color: #FFFFFF;
+    }
+
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.96);
+      backdrop-filter: blur(24px);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 32px;
+      padding: 24px;
+      z-index: 1100;
+    }
+
+    .mobile-menu.open {
+      display: flex;
+    }
+
+    .mobile-menu a {
+      color: #FFFFFF;
+      font-size: 1.1rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .mobile-menu a:hover {
+      color: rgba(255,255,255,0.8);
     }
 
     main {
@@ -133,14 +202,38 @@
     .section {
       padding: 120px 0;
       border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+    }
+
+    .section-label {
+      display: inline-block;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.48);
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      margin-bottom: 18px;
+    }
+
+    .reveal {
       opacity: 0;
-      transform: translateY(24px);
+      transform: translateY(28px);
       transition: opacity 0.8s ease, transform 0.8s ease;
     }
 
-    .section.visible {
+    .reveal.visible {
       opacity: 1;
       transform: translateY(0);
+    }
+
+    h1, h2, h3, .hero-title, .section-title, .impact-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+    }
+
+    p, span, a, li {
+      font-family: 'Inter', sans-serif;
     }
 
     .hero {
@@ -148,295 +241,667 @@
       display: grid;
       place-items: center;
       text-align: center;
-      padding-top: 120px;
-      padding-bottom: 120px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.72);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      padding: 0 16px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 10px 18px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 999px;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
     }
 
     .hero-title {
-      font-size: clamp(48px, 8vw, 120px);
-      font-weight: 700;
-      letter-spacing: -0.08em;
-      line-height: 0.92;
-      max-width: 960px;
-      margin: 0 auto 24px;
+      font-size: clamp(48px, 8vw, 96px);
+      line-height: 0.98;
+      letter-spacing: -0.06em;
+      margin-bottom: 24px;
     }
 
     .hero-subtitle {
-      font-size: clamp(18px, 2vw, 22px);
       color: rgba(255,255,255,0.78);
-      max-width: 760px;
-      margin: 0 auto 40px;
+      font-size: clamp(18px, 2vw, 22px);
       font-weight: 300;
-      letter-spacing: 0.04em;
+      line-height: 1.8;
+      max-width: 720px;
+      margin: 0 auto 42px;
     }
 
-    .hero-action {
+    .hero-button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 18px 28px;
+      gap: 12px;
+      padding: 16px 32px;
       border: 1px solid #FFFFFF;
       background: transparent;
       color: #FFFFFF;
       text-decoration: none;
-      font-size: 0.95rem;
-      letter-spacing: 0.12em;
       text-transform: uppercase;
-      transition: background 0.25s ease, color 0.25s ease;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      transition: all 0.3s ease;
     }
 
-    .hero-action:hover {
+    .hero-button:hover {
       background: #FFFFFF;
       color: #000000;
+      transform: translateY(-2px);
     }
 
-    .numbers {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 32px;
-      margin-top: 40px;
+    .hero-content.hide-text .hero-title,
+    .hero-content.hide-text .hero-sub,
+    .hero-content.hide-text .hero-badge {
+      opacity: 0;
+      transition: opacity 0.8s ease;
     }
 
-    .stat {
-      display: grid;
+    .hero-title, .hero-sub, .hero-badge {
+      transition: opacity 0.8s ease;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      left: 50%;
+      bottom: 40px;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       gap: 12px;
-      justify-items: start;
+      z-index: 2;
     }
 
-    .stat-value {
-      font-size: clamp(42px, 6vw, 72px);
-      font-weight: 700;
-      line-height: 1;
+    .hero-scroll-line {
+      width: 2px;
+      height: 78px;
+      background: rgba(255,255,255,0.32);
+      position: relative;
+      overflow: hidden;
     }
 
-    .stat-label {
-      font-size: 1rem;
-      color: rgba(255,255,255,0.72);
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
+    .hero-scroll-line::before {
+      content: '';
+      position: absolute;
+      top: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 24px;
+      background: #FFFFFF;
+      border-radius: 999px;
+      animation: scroll-down 1.8s ease-in-out infinite;
     }
 
-    .services-grid {
+    @keyframes scroll-down {
+      0% { top: -24px; opacity: 0; }
+      20% { opacity: 1; }
+      80% { top: 80px; opacity: 0.8; }
+      100% { top: 100px; opacity: 0; }
+    }
+
+    .section-title {
+      font-size: clamp(36px, 5vw, 56px);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+      margin-bottom: 32px;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .about-text {
+      max-width: 560px;
+    }
+
+    .about-text p {
+      font-size: 1.05rem;
+      line-height: 1.9;
+      color: rgba(255,255,255,0.88);
+      margin-bottom: 0;
+    }
+
+    .about-text .about-quote {
+      margin-top: 24px;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.5rem;
+      line-height: 1.3;
+      color: #FFFFFF;
+      max-width: 520px;
+    }
+
+    .about-highlight {
+      position: relative;
+      min-height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: left;
+      padding: 36px;
+      background: url('Equipe1.jpg') center / cover no-repeat;
+      color: #FFFFFF;
+      overflow: hidden;
+    }
+
+    .about-highlight::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+    }
+
+    .about-highlight blockquote {
+      position: relative;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(32px, 3.5vw, 48px);
+      line-height: 1.1;
+      max-width: 520px;
+      z-index: 1;
+    }
+
+    .stats-section {
+      background: #0a0a0a;
+    }
+
+    .stats-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0;
-      border: 1px solid rgba(255,255,255,0.08);
+      align-items: center;
+      gap: 24px;
     }
 
-    .service-card {
-      padding: 40px 36px;
-      border-right: 1px solid rgba(255,255,255,0.08);
+    .stat-box {
+      padding: 32px 24px;
+      text-align: center;
     }
 
-    .service-card:last-child {
-      border-right: none;
+    .stat-box:not(:last-child) {
+      border-right: 1px solid rgba(255,255,255,0.12);
     }
 
-    .service-name {
-      font-size: 1.25rem;
-      font-weight: 700;
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(52px, 6vw, 84px);
+      letter-spacing: -0.05em;
       margin-bottom: 16px;
     }
 
-    .service-desc {
-      font-size: 1rem;
-      color: rgba(255,255,255,0.75);
-      line-height: 1.8;
-      max-width: 320px;
+    .stat-label {
+      font-size: 0.95rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.72);
     }
 
-    .impact {
+
+    .cards-grid {
       display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 140px 0;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
     }
 
-    .impact-text {
-      font-size: clamp(42px, 6vw, 72px);
-      font-weight: 700;
-      line-height: 1.01;
-      max-width: 960px;
-      margin: 0 auto;
+    .card {
+      position: relative;
+      padding: 32px 28px;
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: transparent;
     }
 
-    .cta {
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 120px 0 80px;
+    .card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 0;
+      height: 3px;
+      background: #FFFFFF;
+      transition: width 0.35s ease;
     }
 
-    .cta-title {
-      font-size: clamp(32px, 4vw, 56px);
-      font-weight: 700;
-      margin-bottom: 28px;
-      letter-spacing: -0.05em;
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 25px rgba(255,255,255,0.06);
     }
 
-    .cta-btn {
+    .card:hover::before {
+      width: 100%;
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 20px 32px;
-      border: 1px solid #FFFFFF;
-      background: #FFFFFF;
-      color: #000000;
-      text-decoration: none;
-      font-size: 1rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      transition: opacity 0.2s ease;
+      margin-bottom: 24px;
     }
 
-    .cta-btn:hover {
-      opacity: 0.9;
+    .card-icon svg {
+      width: 100%;
+      height: 100%;
+      fill: #FFFFFF;
+      opacity: 0.92;
+    }
+
+    .card-title {
+      font-size: 1.35rem;
+      margin-bottom: 18px;
+      line-height: 1.12;
+    }
+
+    .card-text {
+      color: rgba(255,255,255,0.82);
+      line-height: 1.8;
+      font-size: 1rem;
+      max-width: 370px;
+    }
+
+    .receive-list {
+      display: grid;
+      gap: 18px;
+    }
+
+    .receive-item {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 20px 24px;
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: background 0.3s ease;
+      min-height: 90px;
+    }
+
+    .receive-item:hover {
+      background: rgba(255,255,255,0.04);
+    }
+
+    .receive-index {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.48);
+      min-width: 48px;
+      text-align: right;
+    }
+
+    .receive-check {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      color: #000000;
+      display: grid;
+      place-items: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+
+    .receive-item:hover .receive-check {
+      background: #000000;
+      color: #FFFFFF;
+      border: 1px solid #FFFFFF;
+    }
+
+    .receive-copy {
+      color: rgba(255,255,255,0.88);
+      line-height: 1.8;
+      font-size: 1rem;
+    }
+
+    .clients {
+      position: relative;
+      overflow: hidden;
+      padding: 60px 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    }
+
+    .clients-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1.25rem;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .clients-track {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      white-space: nowrap;
+      animation: scroll 28s linear infinite;
+      width: max-content;
+      min-width: 300%;
+      will-change: transform;
+    }
+
+    .clients-track:hover {
+      animation-play-state: paused;
+    }
+
+    .client-item {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 140px;
+    }
+
+    .client-item img {
+      display: block;
+      height: 60px;
+      width: auto;
+      filter: grayscale(100%) opacity(0.6);
+      transition: all 0.3s ease;
+    }
+
+    .client-item:hover img {
+      filter: grayscale(0%) opacity(1);
+    }
+
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-33.3333%); }
+    }
+
+    .impact {
+      text-align: center;
+      padding: 120px 0;
+    }
+
+    .impact-label {
+      display: inline-block;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.48);
+      margin-bottom: 18px;
+      font-weight: 500;
+    }
+
+    .impact-title {
+      font-size: clamp(42px, 5vw, 72px);
+      line-height: 1.02;
+      margin-bottom: 24px;
+    }
+
+    .impact-copy {
+      max-width: 640px;
+      margin: 0 auto;
+      color: rgba(255,255,255,0.72);
+      line-height: 1.8;
+      font-size: 1rem;
+    }
+
+    .cta {
+      background: #0a0a0a;
+      padding: 100px 0 80px;
+      text-align: center;
+    }
+
+    .cta-title {
+      font-size: clamp(36px, 5vw, 56px);
+      line-height: 1.02;
+      margin-bottom: 18px;
+    }
+
+    .cta-copy {
+      color: rgba(255,255,255,0.78);
+      margin-bottom: 36px;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.8;
+      font-size: 1rem;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px 30px;
+      border-radius: 999px;
+      background: #25D366;
+      color: #000000;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px) scale(1.02);
+      background: #1db85d;
     }
 
     footer {
-      padding: 60px 0;
+      padding: 60px 0 40px;
       text-align: center;
       color: rgba(255,255,255,0.65);
-      font-size: 0.95rem;
+    }
+
+    footer img {
+      height: 80px;
+      display: block;
+      margin: 0 auto 18px;
     }
 
     .whatsapp-float {
       position: fixed;
-      bottom: 24px;
       right: 24px;
-      width: 56px;
-      height: 56px;
+      bottom: 24px;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      overflow: hidden;
       display: grid;
       place-items: center;
-      border: 1px solid #FFFFFF;
-      background: transparent;
-      color: #FFFFFF;
-      text-decoration: none;
-      font-size: 1.25rem;
-      z-index: 999;
-      transition: background 0.25s ease, transform 0.25s ease;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+    }
+
+    .whatsapp-float img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 50%;
     }
 
     .whatsapp-float:hover {
-      background: #FFFFFF;
-      color: #000000;
-      transform: translateY(-4px);
+      transform: translateY(-4px) scale(1.05);
     }
 
-    @media (max-width: 920px) {
-      .numbers,
-      .services-grid {
+    @media (max-width: 1100px) {
+      .about-grid,
+      .gallery-grid,
+      .cards-grid {
         grid-template-columns: 1fr;
       }
 
-      .service-card {
+      .about-highlight {
+        min-height: 360px;
+      }
+
+      .stat-box:not(:last-child) {
         border-right: none;
+        padding-right: 0;
+        margin-right: 0;
         border-bottom: 1px solid rgba(255,255,255,0.08);
       }
 
-      .service-card:last-child {
-        border-bottom: none;
-      }
-
-      .hero {
-        padding-top: 100px;
-        padding-bottom: 100px;
+      .stats-grid {
+        grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width: 620px) {
+    @media (max-width: 760px) {
+      .container {
+        width: calc(100% - 32px);
+      }
+
       .header-inner {
-        flex-direction: column;
-        align-items: stretch;
         gap: 16px;
       }
 
-      .btn-contact {
-        width: 100%;
+      .nav-menu {
+        display: none;
+      }
+
+      .mobile-toggle {
+        display: inline-flex;
+      }
+
+      header.scrolled {
+        background: rgba(0,0,0,0.98);
       }
 
       .hero-title {
-        font-size: clamp(40px, 12vw, 72px);
+        font-size: clamp(34px, 10vw, 48px);
       }
 
       .hero-subtitle {
         font-size: 1rem;
       }
 
-      .section {
-        padding: 80px 0;
+      .about-grid,
+      .gallery-grid,
+      .cards-grid,
+      .stats-grid {
+        grid-template-columns: 1fr;
       }
 
-      .stat {
-        justify-items: start;
+      .gallery-large {
+        min-height: 400px;
       }
 
-      .impact {
-        padding: 100px 0;
+      .gallery-small {
+        gap: 16px;
       }
 
-      .cta {
-        padding: 80px 0 60px;
+      .card,
+      .receive-item {
+        padding: 24px;
       }
 
-      .whatsapp-float {
-        width: 52px;
-        height: 52px;
+      .receive-item {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .receive-item p {
+        max-width: 100%;
       }
     }
   </style>
 </head>
 <body>
   <div class="cursor" id="cursor"></div>
-
-  <header>
+  <header id="page-header">
     <div class="container header-inner">
-      <div class="logo">
-        <img src="logo.png" alt="Agencia Avodah">
-      </div>
-      <nav>
-        <ul class="nav-menu">
-          <li><a href="#sobre">Sobre</a></li>
-          <li><a href="#servicos">Serviços</a></li>
-          <li><a href="#proposito">Propósito</a></li>
-          <li><a href="#contato">Contato</a></li>
-        </ul>
+      <a href="#inicio" class="logo"><img src="logo.PNG" alt="Agência Avodah"></a>
+      <nav class="nav-menu">
+        <a href="#sobre">Sobre</a>
+        <a href="#servicos">Serviços</a>
+        <a href="#proposito">Propósito</a>
+        <a href="#contato">Contato</a>
       </nav>
+      <a class="btn-contact" href="https://wa.me/5575998152933" target="_blank">Fale Conosco</a>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Abrir menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#sobre">Sobre</a>
+      <a href="#servicos">Serviços</a>
+      <a href="#proposito">Propósito</a>
+      <a href="#contato">Contato</a>
       <a class="btn-contact" href="https://wa.me/5575998152933" target="_blank">Fale Conosco</a>
     </div>
   </header>
 
   <main>
-    <section class="hero section reveal">
-      <div class="container">
+    <section id="inicio" class="hero reveal">
+      <video class="hero-video" autoplay muted loop playsinline src="Video.mp4"></video>
+      <div class="hero-overlay"></div>
+      <div class="container hero-content">
+        <span class="hero-badge">Agência de Tráfego Pago · Feira de Santana, BA</span>
         <h1 class="hero-title">Seu negócio merece crescer de verdade.</h1>
-        <p class="hero-subtitle">Estratégia, dados e tráfego inteligente para empresas que querem vender mais.</p>
-        <a class="hero-action" href="https://wa.me/5575998152933" target="_blank">Começar agora →</a>
+        <p class="hero-subtitle hero-sub">Estratégia, dados e tráfego inteligente para empresas que querem vender mais.</p>
+        <a class="hero-button" href="https://wa.me/5575998152933" target="_blank">Começar agora →</a>
+      </div>
+      <div class="hero-scroll">
+        <div class="hero-scroll-line"></div>
       </div>
     </section>
 
-    <section id="sobre" class="section reveal">
-      <div class="container">
-        <p style="max-width: 760px; margin: 0 auto; color: rgba(255,255,255,0.78); font-size: 1rem; line-height: 1.9; letter-spacing: 0.03em;">
-          Há 5 anos ajudando empresas a vender mais com estratégia, dados e tráfego inteligente. Somos uma agência de resultados, não de promessas.
-        </p>
+    <section id="sobre" class="section sobre-section reveal">
+      <div class="container about-grid">
+        <div class="about-text">
+          <span class="section-label">QUEM SOMOS</span>
+          <p>Há cinco anos transformamos investimento em resultado real. Somos especialistas em tráfego pago, criação de conteúdo e gestão de marca digital — com estratégia, dados e propósito.</p>
+          <p class="about-quote">Não trabalhamos com promessas. Trabalhamos com métricas, estratégia e resultados mensuráveis.</p>
+        </div>
+        <div class="about-highlight"></div>
       </div>
     </section>
 
-    <section class="section reveal">
+    <section class="section stats-section reveal">
       <div class="container">
-        <div class="numbers">
-          <div class="stat">
-            <div class="stat-value">5+</div>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-number"><span class="counter" data-target="5">0</span>+</div>
             <div class="stat-label">Anos de mercado</div>
           </div>
-          <div class="stat">
-            <div class="stat-value">15+</div>
+          <div class="stat-box">
+            <div class="stat-number"><span class="counter" data-target="15">0</span>+</div>
             <div class="stat-label">Clientes ativos</div>
           </div>
-          <div class="stat">
-            <div class="stat-value">R$1M+</div>
+          <div class="stat-box">
+            <div class="stat-number">R$<span class="counter" data-target="1">0</span>M+</div>
             <div class="stat-label">Investido em tráfego</div>
           </div>
         </div>
@@ -445,73 +910,239 @@
 
     <section id="servicos" class="section reveal">
       <div class="container">
-        <div class="services-grid">
-          <div class="service-card">
-            <h2 class="service-name">Tráfego Pago</h2>
-            <p class="service-desc">Meta Ads e Google Ads com resultado real e foco em conversão.</p>
+        <span class="section-label">O QUE FAZEMOS</span>
+        <h2 class="section-title">O que fazemos</h2>
+        <div class="cards-grid">
+          <article class="card">
+            <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11v2h2l3 5h6l3-5h2v-2h-2l-3-5H8L5 11H3zm8-3l1.5 2.5H9.5L11 8zm0 8l-1.5-2.5h3L11 16z"/></svg></div>
+            <h3 class="card-title">Tráfego Pago</h3>
+            <p class="card-text">Meta Ads e Google Ads com resultado real e foco em conversão.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5V21h1.5l6.32-6.32-1.5-1.5L4 19.5zM20.71 7.04a1.003 1.003 0 000-1.42l-2.34-2.34a1.003 1.003 0 00-1.42 0L14.13 5.1l3.76 3.76 2.82-2.82zM13.06 6.17L4 15.23V20h4.77l9.06-9.06-4.77-4.77z"/></svg></div>
+            <h3 class="card-title">Criação de Conteúdo</h3>
+            <p class="card-text">Conteúdo pensado para engajar audiência e transformar interesse em vendas.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.7 0 4.5-1.8 4.5-4.5S14.7 3 12 3 7.5 4.8 7.5 7.5 9.3 12 12 12zm0 1.5c-3 0-9 1.5-9 4.5V21h18v-3c0-3-6-4.5-9-4.5z"/></svg></div>
+            <h3 class="card-title">Gestão de Perfil</h3>
+            <p class="card-text">Presença digital consistente e estratégica para fortalecer sua marca.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="container">
+        <span class="section-label">NOSSOS DIFERENCIAIS</span>
+        <h2 class="section-title">Nossos Diferenciais</h2>
+        <div class="cards-grid">
+          <article class="card">
+            <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21h6v-2H9v2zm3-19a5 5 0 00-5 5c0 1.65.84 3.09 2.13 3.96L9 17h6l-.13-4.04A4.992 4.992 0 0017 7a5 5 0 00-5-5zm0 2a3 3 0 013 3c0 1.1-.45 2.1-1.17 2.83L12 14l-1.83-1.17A2.99 2.99 0 019 7a3 3 0 013-3z"/></svg></div>
+            <h3 class="card-title">Criatividade e Inovação</h3>
+            <p class="card-text">Trazemos novas ideias e abordagens criativas para o conteúdo, mantendo sua marca em destaque nas redes sociais.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zm17.71-10.04c.39-.39.39-1.02 0-1.41l-2.5-2.5a.995.995 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.99-1.67z"/></svg></div>
+            <h3 class="card-title">Análise de Métricas</h3>
+            <p class="card-text">Compreensão profunda dos indicadores de desempenho para análises precisas e ajustes estratégicos contínuos.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3L4 9v6c0 1.1.9 2 2 2h3v-3H6v-4l6-3 6 3v4h-3v3h3c1.1 0 2-.9 2-2V9l-8-6z"/></svg></div>
+            <h3 class="card-title">Tendências em Tempo Real</h3>
+            <p class="card-text">Acompanhamos as últimas mudanças do mercado e aplicamos rapidamente para maximizar seu impacto online.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="container">
+        <span class="section-label">O QUE VOCÊ RECEBE</span>
+        <h2 class="section-title">O que você recebe</h2>
+        <div class="receive-list">
+          <div class="receive-item">
+            <span class="receive-index">01</span>
+            <span class="receive-check">✓</span>
+            <p class="receive-copy">Gerenciamento completo das contas de anúncio no Meta Ads e Google Ads</p>
           </div>
-          <div class="service-card">
-            <h2 class="service-name">Criação de Conteúdo</h2>
-            <p class="service-desc">Conteúdo pensado para engajar audiência e transformar interesse em vendas.</p>
+          <div class="receive-item">
+            <span class="receive-index">02</span>
+            <span class="receive-check">✓</span>
+            <p class="receive-copy">Criação e configuração de campanhas com segmentação e orçamento otimizados</p>
           </div>
-          <div class="service-card">
-            <h2 class="service-name">Gestão de Perfil</h2>
-            <p class="service-desc">Presença digital consistente e estratégica para fortalecer sua marca.</p>
+          <div class="receive-item">
+            <span class="receive-index">03</span>
+            <span class="receive-check">✓</span>
+            <p class="receive-copy">Sugestão de criativos — imagens, vídeos e textos de alta performance</p>
+          </div>
+          <div class="receive-item">
+            <span class="receive-index">04</span>
+            <span class="receive-check">✓</span>
+            <p class="receive-copy">Monitoramento diário com relatórios de CPC, CTR, CPA e otimizações estratégicas</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="proposito" class="impact section reveal">
+    <section class="clients section reveal">
       <div class="container">
-        <p class="impact-text">Acreditamos que todo negócio merece crescer. Por isso unimos criatividade e dados para transformar investimento em resultado real.</p>
+        <div class="clients-title">Marcas que já cresceram com a Avodah</div>
+        <div class="clients-track">
+          <div class="client-item"><img src="Cliente1.jpg" alt="Cliente 1"></div>
+          <div class="client-item"><img src="Cliente2.jpg" alt="Cliente 2"></div>
+          <div class="client-item"><img src="Cliente3.jpg" alt="Cliente 3"></div>
+          <div class="client-item"><img src="Cliente4.jpg" alt="Cliente 4"></div>
+          <div class="client-item"><img src="Cliente5.jpg" alt="Cliente 5"></div>
+          <div class="client-item"><img src="Cliente6.jpg" alt="Cliente 6"></div>
+          <div class="client-item"><img src="Cliente7.jpg" alt="Cliente 7"></div>
+          <div class="client-item"><img src="Cliente8.jpg" alt="Cliente 8"></div>
+          <div class="client-item"><img src="Cliente1.jpg" alt="Cliente 1"></div>
+          <div class="client-item"><img src="Cliente2.jpg" alt="Cliente 2"></div>
+          <div class="client-item"><img src="Cliente3.jpg" alt="Cliente 3"></div>
+          <div class="client-item"><img src="Cliente4.jpg" alt="Cliente 4"></div>
+          <div class="client-item"><img src="Cliente5.jpg" alt="Cliente 5"></div>
+          <div class="client-item"><img src="Cliente6.jpg" alt="Cliente 6"></div>
+          <div class="client-item"><img src="Cliente7.jpg" alt="Cliente 7"></div>
+          <div class="client-item"><img src="Cliente8.jpg" alt="Cliente 8"></div>
+          <div class="client-item"><img src="Cliente1.jpg" alt="Cliente 1"></div>
+          <div class="client-item"><img src="Cliente2.jpg" alt="Cliente 2"></div>
+          <div class="client-item"><img src="Cliente3.jpg" alt="Cliente 3"></div>
+          <div class="client-item"><img src="Cliente4.jpg" alt="Cliente 4"></div>
+          <div class="client-item"><img src="Cliente5.jpg" alt="Cliente 5"></div>
+          <div class="client-item"><img src="Cliente6.jpg" alt="Cliente 6"></div>
+          <div class="client-item"><img src="Cliente7.jpg" alt="Cliente 7"></div>
+          <div class="client-item"><img src="Cliente8.jpg" alt="Cliente 8"></div>
+        </div>
       </div>
     </section>
 
-    <section id="contato" class="cta section reveal">
+    <section id="proposito" class="section impact reveal">
       <div class="container">
-        <h2 class="cta-title">Pronto para vender mais?</h2>
-        <a class="cta-btn" href="https://wa.me/5575998152933" target="_blank">Falar com a Avodah no WhatsApp</a>
+        <span class="impact-label">Nosso propósito</span>
+        <h2 class="impact-title">Seu investimento tem que dar retorno. Garantimos isso.</h2>
+        <p class="impact-copy">Dados. Estratégia. Resultado. Nessa ordem.</p>
+      </div>
+    </section>
+
+    <section id="contato" class="section cta reveal">
+      <div class="container">
+        <h2 class="cta-title">Chega de deixar dinheiro na mesa.</h2>
+        <p class="cta-copy">Enquanto você lê isso, seu concorrente está anunciando.</p>
+        <a class="cta-button" href="https://wa.me/5575998152933" target="_blank">
+          <span>Quero resultados agora</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.7 9.7c-.2-.2-.5-.3-.8-.2-1.4.4-2.7 1.3-3.8 2.3-1 1-1.8 2.2-2.2 3.5-.1.3 0 .6.2.8l2.3 2.3c.2.2.5.3.8.2 1.4-.4 2.7-1.3 3.8-2.3 1-1 1.8-2.2 2.2-3.5.1-.3 0-.6-.2-.8l-2.3-2.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.5 5L2 22l5-1.5c1.4.9 3.1 1.4 5 1.4 5.5 0 10-4.5 10-10S17.5 2 12 2z" fill="#000"/></svg>
+        </a>
       </div>
     </section>
   </main>
 
   <footer>
     <div class="container">
-      <img src="logo.png" alt="Agencia Avodah" style="height: 32px; margin-bottom: 18px; opacity: 0.88;">
-      <p>© 2025 Agência Avodah</p>
+      <img src="logo.PNG" alt="Agência Avodah">
+      <p>© 2026 Agência Avodah · Feira de Santana, BA</p>
     </div>
   </footer>
 
-  <a class="whatsapp-float" href="https://wa.me/5575998152933" target="_blank" aria-label="WhatsApp">💬</a>
+  <a class="whatsapp-float" href="https://wa.me/5575998152933" target="_blank" aria-label="WhatsApp">
+    <img src="whats1.jpeg" alt="WhatsApp">
+  </a>
 
   <script>
+    const pageHeader = document.getElementById('page-header');
+    const mobileToggle = document.getElementById('mobileToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
     const cursor = document.getElementById('cursor');
+    const reveals = document.querySelectorAll('.reveal');
+    const counters = document.querySelectorAll('.counter');
+
+    const updateHeader = () => {
+      if (window.scrollY > 24) {
+        pageHeader.classList.add('scrolled');
+      } else {
+        pageHeader.classList.remove('scrolled');
+      }
+    };
+
+    window.addEventListener('scroll', updateHeader);
+    updateHeader();
+
+    mobileToggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('open');
+    });
+
+    document.querySelectorAll('.mobile-menu a').forEach(link => {
+      link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    });
+
     document.addEventListener('mousemove', (event) => {
       cursor.style.transform = `translate(${event.clientX}px, ${event.clientY}px)`;
     });
 
-    document.querySelectorAll('a').forEach((link) => {
-      link.addEventListener('mouseover', () => {
-        cursor.style.transform += ' scale(1.4)';
-      });
-      link.addEventListener('mouseout', () => {
-        cursor.style.transform = cursor.style.transform.replace(' scale(1.4)', '');
-      });
+    document.querySelectorAll('a, .btn-contact, .card, .receive-item').forEach((element) => {
+      element.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
+      element.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
     });
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
         }
       });
-    }, {
-      threshold: 0.2,
-    });
+    }, { threshold: 0.2 });
 
-    document.querySelectorAll('.reveal').forEach((section) => observer.observe(section));
+    reveals.forEach(section => revealObserver.observe(section));
+
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+    const animateCounter = (element, target) => {
+      const duration = 1300;
+      const start = performance.now();
+
+      const tick = (timestamp) => {
+        const elapsed = timestamp - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const value = Math.round(target * easeOutCubic(progress));
+        element.textContent = value;
+        if (progress < 1) {
+          requestAnimationFrame(tick);
+        }
+      };
+
+      requestAnimationFrame(tick);
+    };
+
+    const counterObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const counter = entry.target;
+          const target = +counter.dataset.target;
+          animateCounter(counter, target);
+          observer.unobserve(counter);
+        }
+      });
+    }, { threshold: 0.6 });
+
+    counters.forEach(counter => counterObserver.observe(counter));
+
+    const heroVideo = document.querySelector('.hero-video');
+    const heroContent = document.querySelector('.hero-content');
+
+    const updateHeroTextVisibility = () => {
+      if (!heroVideo || !heroContent) return;
+      const duration = heroVideo.duration;
+      if (!duration || isNaN(duration)) return;
+      if (heroVideo.currentTime >= duration - 3) {
+        heroContent.classList.add('hide-text');
+      } else {
+        heroContent.classList.remove('hide-text');
+      }
+    };
+
+    heroVideo.addEventListener('timeupdate', updateHeroTextVisibility);
+    heroVideo.addEventListener('seeked', updateHeroTextVisibility);
+    heroVideo.addEventListener('loadedmetadata', updateHeroTextVisibility);
   </script>
 </body>
 </html>
